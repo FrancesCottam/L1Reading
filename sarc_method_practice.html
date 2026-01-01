@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SARC Method Practice - L1 Reading</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #2D3561;
+            --secondary: #E94F37;
+            --accent: #F6C90E;
+            --success: #3DA35D;
+            --bg: #F7F9FC;
+            --text: #1F2937;
+            --card-bg: #FFFFFF;
+        }
+        
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            color: #6B7280;
+            font-size: 1rem;
+        }
+        
+        .score-board {
+            background: var(--accent);
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .score-board span {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+        
+        .step {
+            flex: 1;
+            padding: 12px;
+            background: #E5E7EB;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        
+        .step.active {
+            background: var(--secondary);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .step.completed {
+            background: var(--success);
+            color: white;
+        }
+        
+        .text-box {
+            background: #F9FAFB;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        
+        .text-box h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .question {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .option {
+            background: #F9FAFB;
+            border: 3px solid #E5E7EB;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            text-align: left;
+        }
+        
+        .option:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+            background: white;
+        }
+        
+        .option.selected {
+            border-color: var(--secondary);
+            background: #FEF2F2;
+        }
+        
+        .option.correct {
+            border-color: var(--success);
+            background: #D1FAE5;
+            animation: pulse 0.5s;
+        }
+        
+        .option.incorrect {
+            border-color: var(--secondary);
+            background: #FEE2E2;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+            font-family: 'Space Mono', monospace;
+            box-shadow: 0 4px 15px rgba(233, 79, 55, 0.3);
+        }
+        
+        .btn:hover {
+            background: #D63F2D;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 79, 55, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #9CA3AF;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            animation: slideIn 0.3s;
+        }
+        
+        .feedback.correct {
+            background: #D1FAE5;
+            color: #065F46;
+            border-left: 5px solid var(--success);
+        }
+        
+        .feedback.incorrect {
+            background: #FEE2E2;
+            color: #991B1B;
+            border-left: 5px solid var(--secondary);
+        }
+        
+        .explanation {
+            margin-top: 10px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .final-score {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .final-score h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .final-score .percentage {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #E5E7EB;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            width: 0;
+            transition: width 0.5s ease-out;
+        }
+        
+        @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .step {
+                font-size: 0.7rem;
+                padding: 8px 4px;
+            }
+            
+            .option {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 SARC Method Practice</h1>
+            <p>Master the strategy for L1 Reading exam success</p>
+        </div>
+        
+        <div class="score-board">
+            <span>Question: <span id="current-q">1</span>/5</span>
+            <span>Score: <span id="score">0</span>/5</span>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+        
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                step: "Survey",
+                text: `
+                    <h3>Mobile Phone Safety Tips</h3>
+                    <p>Looking down at your phone puts strain on your neck and spine. Doctors call this 'tech neck' and warn it can cause long-term damage.</p>
+                    <p><strong>What You Can Do:</strong> Hold your phone at eye level. Take breaks every 20 minutes. Do neck stretches throughout the day.</p>
+                    <p>The blue light from screens tells your brain it's daytime. Using phones before bed can make it harder to fall asleep.</p>
+                `,
+                question: "You have 30 seconds to SURVEY this text. What is it mainly about?",
+                options: [
+                    "How to buy a new phone",
+                    "Health problems from phone use",
+                    "How phones are made",
+                    "Social media apps"
+                ],
+                correct: 1,
+                explanation: "Survey means quickly identifying the TOPIC. The headings and key phrases ('tech neck', 'health') tell you it's about health problems, not buying phones or apps."
+            },
+            {
+                step: "Analyze",
+                text: `
+                    <p><strong>Question from exam:</strong> "According to the text, what should you do BEFORE going shopping?"</p>
+                `,
+                question: "ANALYZE this question. What are the key words that tell you what to look for?",
+                options: [
+                    "'According to the text' and 'shopping'",
+                    "'BEFORE going shopping'",
+                    "'should you do'",
+                    "All the words are equally important"
+                ],
+                correct: 1,
+                explanation: "The key word is 'BEFORE' - this tells you to look for what happens first, in sequence. You're looking for preparation/planning steps that come before shopping."
+            },
+            {
+                step: "Reference",
+                text: `
+                    <h3>Plan Your Meals</h3>
+                    <ul>
+                        <li>Make a weekly menu</li>
+                        <li>Check what you already have</li>
+                        <li>Create a shopping list</li>
+                    </ul>
+                    <h3>Shop Smart</h3>
+                    <p>Look for special offers but only buy what you need. Supermarket own-brands are often just as good.</p>
+                `,
+                question: "REFERENCE: Scan the text to find what you should do BEFORE shopping.",
+                options: [
+                    "Look for special offers",
+                    "Buy supermarket own-brands",
+                    "Make a weekly menu and create a shopping list",
+                    "Only buy what you need"
+                ],
+                correct: 2,
+                explanation: "The 'Plan Your Meals' section comes BEFORE 'Shop Smart'. The planning steps (menu, check supplies, make list) all happen before you go to the shop."
+            },
+            {
+                step: "Reference",
+                text: `
+                    <p>Writing is more complicated because it <strong>integrates</strong> the following three brain processes: Visual, Motor, and Cognitive. These three systems working together is what makes handwriting so valuable.</p>
+                `,
+                question: "The word 'integrates' could be replaced by...",
+                options: [
+                    "separates",
+                    "combines",
+                    "mentions",
+                    "avoids"
+                ],
+                correct: 1,
+                explanation: "REFERENCE the sentence after: 'three systems working TOGETHER'. If they work together, they must be combined/integrated, not separated."
+            },
+            {
+                step: "Check",
+                text: `
+                    <p><strong>Your answer:</strong> "The text is about healthy eating."</p>
+                    <p><strong>Question was:</strong> "What is the MAIN PURPOSE of this document?"</p>
+                    <p><strong>Options were:</strong> a) To inform b) To persuade c) To instruct d) To describe</p>
+                `,
+                question: "CHECK: Did you answer the question that was asked?",
+                options: [
+                    "Yes - healthy eating is the purpose",
+                    "No - you identified the topic, not the purpose",
+                    "Yes - it's obviously about food",
+                    "The question is confusing"
+                ],
+                correct: 1,
+                explanation: "CHECK means re-reading the question. It asked for PURPOSE (why written), not TOPIC (what it's about). You need to pick from inform/persuade/instruct/describe!"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+
+        function updateStepIndicator(activeStep) {
+            const steps = ['S', 'A', 'R', 'C'];
+            let html = '<div class="step-indicator">';
+            
+            const currentStepName = questions[currentQuestion].step;
+            
+            steps.forEach(step => {
+                let stepClass = 'step';
+                if (step === currentStepName[0]) {
+                    stepClass += ' active';
+                }
+                html += `<div class="${stepClass}">${step}</div>`;
+            });
+            
+            html += '</div>';
+            return html;
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQuestion];
+            const container = document.getElementById('quiz-container');
+            
+            let html = `
+                <div class="card">
+                    ${updateStepIndicator()}
+                    <div class="text-box">
+                        ${q.text}
+                    </div>
+                    <div class="question">
+                        ${q.question}
+                    </div>
+                    <div class="options">
+            `;
+            
+            q.options.forEach((option, index) => {
+                html += `
+                    <div class="option" onclick="selectAnswer(${index})">
+                        ${String.fromCharCode(65 + index)}) ${option}
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                    <button class="btn" id="submit-btn" onclick="checkAnswer()" disabled>
+                        Submit Answer
+                    </button>
+                    <div id="feedback" class="hidden"></div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            selectedAnswer = null;
+            updateProgress();
+        }
+
+        function selectAnswer(index) {
+            selectedAnswer = index;
+            
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            document.querySelectorAll('.option')[index].classList.add('selected');
+            document.getElementById('submit-btn').disabled = false;
+        }
+
+        function checkAnswer() {
+            const q = questions[currentQuestion];
+            const feedback = document.getElementById('feedback');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            submitBtn.disabled = true;
+            
+            document.querySelectorAll('.option').forEach((opt, idx) => {
+                opt.style.pointerEvents = 'none';
+                if (idx === q.correct) {
+                    opt.classList.add('correct');
+                } else if (idx === selectedAnswer) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            const isCorrect = selectedAnswer === q.correct;
+            if (isCorrect) {
+                score++;
+                document.getElementById('score').textContent = score;
+            }
+            
+            feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedback.innerHTML = `
+                <strong>${isCorrect ? '✓ Correct!' : '✗ Not quite!'}</strong>
+                <div class="explanation">${q.explanation}</div>
+            `;
+            feedback.classList.remove('hidden');
+            
+            submitBtn.textContent = currentQuestion < questions.length - 1 ? 'Next Question →' : 'See Results';
+            submitBtn.onclick = nextQuestion;
+            submitBtn.disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                document.getElementById('current-q').textContent = currentQuestion + 1;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function showResults() {
+            const container = document.getElementById('quiz-container');
+            const percentage = Math.round((score / questions.length) * 100);
+            
+            let message = '';
+            let emoji = '';
+            if (percentage >= 80) {
+                message = "Outstanding! You've mastered SARC!";
+                emoji = "🏆";
+            } else if (percentage >= 60) {
+                message = "Good work! Keep practicing SARC.";
+                emoji = "👍";
+            } else {
+                message = "Keep learning! Review the SARC steps.";
+                emoji = "📚";
+            }
+            
+            container.innerHTML = `
+                <div class="card final-score">
+                    <div style="font-size: 5rem;">${emoji}</div>
+                    <h2>Quiz Complete!</h2>
+                    <div class="percentage">${percentage}%</div>
+                    <p style="font-size: 1.2rem; margin-bottom: 30px;">${message}</p>
+                    <p style="margin-bottom: 30px;">You scored <strong>${score} out of ${questions.length}</strong></p>
+                    <button class="btn" onclick="location.reload()">
+                        Try Again
+                    </button>
+                </div>
+            `;
+        }
+
+        // Initialize
+        renderQuestion();
+    </script>
+</body>
+</html>

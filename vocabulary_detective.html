@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Detective - L1 Reading</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366F1;
+            --secondary: #EC4899;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 35px;
+            border-radius: 25px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        
+        .header .subtitle {
+            color: #6B7280;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .strategy-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+        
+        .strategy-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        
+        .strategy-step {
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        
+        .stats-bar {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #9CA3AF;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .question-card {
+            background: white;
+            padding: 35px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .word-spotlight {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 3px dashed var(--warning);
+        }
+        
+        .target-word {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .word-context {
+            font-size: 1rem;
+            color: #6B7280;
+            font-style: italic;
+        }
+        
+        .context-box {
+            background: #F3F4F6;
+            padding: 25px;
+            border-radius: 15px;
+            line-height: 1.9;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary);
+            font-size: 1.05rem;
+        }
+        
+        .context-box .highlight {
+            background: linear-gradient(120deg, #FEF3C7 0%, #FDE68A 100%);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .context-box .sentence {
+            margin-bottom: 15px;
+        }
+        
+        .context-box .sentence:last-child {
+            margin-bottom: 0;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 25px;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+            border-radius: 12px;
+        }
+        
+        .answers-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .answer-option {
+            padding: 22px;
+            background: #F9FAFB;
+            border: 3px solid #E5E7EB;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: left;
+        }
+        
+        .answer-option:hover {
+            border-color: var(--primary);
+            background: white;
+            transform: translateX(8px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.2);
+        }
+        
+        .answer-option.selected {
+            border-color: var(--secondary);
+            background: #FCE7F3;
+        }
+        
+        .answer-option.correct {
+            border-color: var(--success);
+            background: #D1FAE5;
+            animation: pulse 0.6s;
+        }
+        
+        .answer-option.incorrect {
+            border-color: #EF4444;
+            background: #FEE2E2;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 22px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .feedback {
+            margin-top: 25px;
+            padding: 30px;
+            border-radius: 15px;
+            animation: fadeSlideIn 0.5s;
+        }
+        
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .feedback.correct {
+            background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+            border-left: 6px solid var(--success);
+        }
+        
+        .feedback.incorrect {
+            background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+            border-left: 6px solid #EF4444;
+        }
+        
+        .feedback-header {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .feedback-explanation {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+        
+        .clue-box {
+            background: rgba(255,255,255,0.6);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .clue-box strong {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+        
+        .clue-box p {
+            margin: 8px 0;
+            line-height: 1.7;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .final-results {
+            text-align: center;
+            padding: 50px 30px;
+        }
+        
+        .final-results h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            color: var(--primary);
+            font-weight: 900;
+        }
+        
+        .results-display {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 25px;
+            margin: 30px 0;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        
+        .results-display .big-score {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+        
+        .results-display .score-label {
+            font-size: 1.5rem;
+            opacity: 0.95;
+        }
+        
+        @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 25px;
+            }
+            
+            .question-card {
+                padding: 25px;
+            }
+            
+            .target-word {
+                font-size: 2rem;
+            }
+            
+            .strategy-steps {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Vocabulary Detective</h1>
+            <p class="subtitle">Use context clues to crack the code!</p>
+        </div>
+        
+        <div class="strategy-card">
+            <div class="strategy-steps">
+                <div class="strategy-step">1️⃣ SCAN</div>
+                <div class="strategy-step">2️⃣ EXPAND</div>
+                <div class="strategy-step">3️⃣ SUBSTITUTE</div>
+            </div>
+        </div>
+        
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-label">Question</div>
+                <div class="stat-value"><span id="current">1</span>/5</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Correct</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+        </div>
+        
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                word: "integrates",
+                context: [
+                    "Compared to using two hands to type out letters on a keyboard, writing with one hand uses more complex brain power.",
+                    "Writing is more complicated because it <span class='highlight'>integrates</span> the following three brain processes: Visual, Motor, and Cognitive.",
+                    "These three systems working together is what makes handwriting so valuable for learning."
+                ],
+                question: "The word 'integrates' could be replaced by...",
+                options: [
+                    "separates",
+                    "combines",
+                    "mentions",
+                    "avoids"
+                ],
+                correct: 1,
+                explanation: "The context tells us that integrates means COMBINES. Look at the sentence AFTER the word: 'three systems working TOGETHER'. If systems work together, they must be combined, not separated!",
+                clues: [
+                    "BEFORE: Writing uses complex brain power",
+                    "WITH: integrates three brain processes",
+                    "AFTER: 'three systems working TOGETHER' (key clue!)"
+                ]
+            },
+            {
+                word: "tweaked",
+                context: [
+                    "Our restaurant menu changes with the seasons to use fresh ingredients.",
+                    "Each recipe can be <span class='highlight'>tweaked</span> to your tastes and counts as a veggie option!",
+                    "If you don't like something, just let us know and we'll adjust it for you."
+                ],
+                question: "In this document, the word 'tweaked' means...",
+                options: [
+                    "removed",
+                    "adjusted",
+                    "broken",
+                    "measured"
+                ],
+                correct: 1,
+                explanation: "The text literally gives you the answer! The sentence AFTER says 'we'll ADJUST it'. This is a direct synonym clue - when a text uses another word with the same meaning right after, that's your answer!",
+                clues: [
+                    "BEFORE: menu changes with seasons",
+                    "WITH: can be tweaked to your tastes",
+                    "AFTER: 'we'll ADJUST it' (synonym clue - the answer!)"
+                ]
+            },
+            {
+                word: "mandatory",
+                context: [
+                    "After the successful trial, the council made it <span class='highlight'>mandatory</span> for all staff to wear high-visibility clothing.",
+                    "This means everyone must wear it - it is required, not optional.",
+                    "Failure to comply will result in disciplinary action."
+                ],
+                question: "The word 'mandatory' in the text means...",
+                options: [
+                    "suggested",
+                    "optional",
+                    "required",
+                    "expensive"
+                ],
+                correct: 2,
+                explanation: "This uses a DEFINITION clue! The sentence right after the word DEFINES it: 'must wear it - it is REQUIRED, not optional'. The text is actually explaining what mandatory means. Also, 'Failure to comply = disciplinary action' shows it's not a choice!",
+                clues: [
+                    "WITH: made it mandatory",
+                    "AFTER: 'must wear it' and 'REQUIRED' (definition clue!)",
+                    "AFTER: 'not optional' (antonym clue)",
+                    "AFTER: punishment for not doing it (shows it's required)"
+                ]
+            },
+            {
+                word: "advocate",
+                context: [
+                    "The organization's mission is to <span class='highlight'>advocate</span> for better mental health services in schools.",
+                    "They campaign for increased funding, raise public awareness through events, and push politicians to implement policy changes.",
+                    "Last year, their efforts helped secure £2 million for school counselling programs."
+                ],
+                question: "What does 'advocate' mean in the context of the document?",
+                options: [
+                    "work as an expert",
+                    "support strongly",
+                    "teach about",
+                    "criticize"
+                ],
+                correct: 1,
+                explanation: "Use the EXPLANATION clue! The sentence after tells you what advocating involves: 'campaign', 'raise awareness', 'push for policy changes'. All these actions show they SUPPORT the cause strongly. They're not just teaching about it - they're actively fighting for it!",
+                clues: [
+                    "AFTER: Lists actions - 'campaign', 'raise awareness', 'push for changes'",
+                    "These actions = strong support for the cause",
+                    "SUCCESS mentioned: 'secured £2 million' (shows active support worked)"
+                ]
+            },
+            {
+                word: "compliance",
+                context: [
+                    "The new food safety regulations require strict <span class='highlight'>compliance</span> from all restaurants.",
+                    "Businesses must follow these rules exactly - there are no exceptions allowed.",
+                    "Regular inspections will check that owners are meeting all requirements, and those who fail to comply will face fines of up to £5,000."
+                ],
+                question: "In this text, the word 'compliance' means...",
+                options: [
+                    "agreement",
+                    "following rules",
+                    "payment",
+                    "understanding"
+                ],
+                correct: 1,
+                explanation: "The text uses both DEFINITION and SYNONYM clues! Right after 'compliance', it says businesses 'must FOLLOW these rules'. Then later it says 'fail to COMPLY' - comply is the verb form of compliance. Both tell you it means following/obeying the rules!",
+                clues: [
+                    "AFTER: 'must FOLLOW these rules exactly' (definition clue!)",
+                    "AFTER: 'fail to COMPLY' (same word, verb form)",
+                    "AFTER: 'meeting all requirements' (same meaning)",
+                    "Consequences: fines for NOT doing it (shows it means obeying)"
+                ]
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+        let selected = null;
+
+        function renderQuestion() {
+            const q = questions[currentQ];
+            const container = document.getElementById('quiz-container');
+            
+            let contextHtml = q.context.map(sentence => 
+                `<div class="sentence">${sentence}</div>`
+            ).join('');
+            
+            let optionsHtml = q.options.map((option, idx) =>
+                `<div class="answer-option" onclick="selectAnswer(${idx})">
+                    ${String.fromCharCode(65 + idx)}) ${option}
+                </div>`
+            ).join('');
+            
+            container.innerHTML = `
+                <div class="question-card">
+                    <div class="word-spotlight">
+                        <div class="target-word">${q.word}</div>
+                        <div class="word-context">What does this word mean?</div>
+                    </div>
+                    
+                    <div class="context-box">
+                        ${contextHtml}
+                    </div>
+                    
+                    <div class="question-text">
+                        ${q.question}
+                    </div>
+                    
+                    <div class="answers-grid">
+                        ${optionsHtml}
+                    </div>
+                    
+                    <button class="submit-btn" id="submit" onclick="checkAnswer()" disabled>
+                        Check Answer
+                    </button>
+                    
+                    <div id="feedback" class="hidden"></div>
+                </div>
+            `;
+            
+            selected = null;
+        }
+
+        function selectAnswer(idx) {
+            selected = idx;
+            
+            document.querySelectorAll('.answer-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            document.querySelectorAll('.answer-option')[idx].classList.add('selected');
+            document.getElementById('submit').disabled = false;
+        }
+
+        function checkAnswer() {
+            const q = questions[currentQ];
+            const feedback = document.getElementById('feedback');
+            const isCorrect = selected === q.correct;
+            
+            document.querySelectorAll('.answer-option').forEach((opt, idx) => {
+                opt.style.pointerEvents = 'none';
+                
+                if (idx === q.correct) {
+                    opt.classList.add('correct');
+                } else if (idx === selected) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            if (isCorrect) {
+                score++;
+                document.getElementById('score').textContent = score;
+            }
+            
+            let cluesHtml = '';
+            if (q.clues) {
+                cluesHtml = `
+                    <div class="clue-box">
+                        <strong>🔎 Context Clues You Should Have Found:</strong>
+                        ${q.clues.map(clue => `<p>• ${clue}</p>`).join('')}
+                    </div>
+                `;
+            }
+            
+            feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedback.innerHTML = `
+                <div class="feedback-header">
+                    ${isCorrect ? '✓ Excellent!' : '✗ Not Quite!'}
+                </div>
+                <div class="feedback-explanation">
+                    <strong>The correct answer is: ${q.options[q.correct]}</strong>
+                </div>
+                <div class="feedback-explanation">
+                    ${q.explanation}
+                </div>
+                ${cluesHtml}
+            `;
+            feedback.classList.remove('hidden');
+            
+            const submitBtn = document.getElementById('submit');
+            submitBtn.textContent = currentQ < questions.length - 1 ? 'Next Word →' : 'See Results';
+            submitBtn.onclick = nextQuestion;
+            submitBtn.disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            
+            if (currentQ < questions.length) {
+                document.getElementById('current').textContent = currentQ + 1;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const container = document.getElementById('quiz-container');
+            const percentage = Math.round((score / questions.length) * 100);
+            
+            let message = '';
+            let emoji = '';
+            
+            if (percentage === 100) {
+                message = "Perfect! You're a vocabulary master!";
+                emoji = "🏆";
+            } else if (percentage >= 80) {
+                message = "Excellent work! Context clues are your friend!";
+                emoji = "⭐";
+            } else if (percentage >= 60) {
+                message = "Good job! Keep practicing those clues!";
+                emoji = "👍";
+            } else {
+                message = "Keep going! Remember: Scan-Expand-Substitute!";
+                emoji = "📚";
+            }
+            
+            container.innerHTML = `
+                <div class="question-card final-results">
+                    <div style="font-size: 6rem; margin-bottom: 20px;">${emoji}</div>
+                    <h2>Detective Work Complete!</h2>
+                    
+                    <div class="results-display">
+                        <div class="big-score">${score}/${questions.length}</div>
+                        <div class="score-label">${percentage}% Correct</div>
+                    </div>
+                    
+                    <p style="font-size: 1.4rem; color: var(--dark); margin: 30px 0;">
+                        ${message}
+                    </p>
+                    
+                    <button class="submit-btn" onclick="location.reload()">
+                        Solve More Words
+                    </button>
+                </div>
+            `;
+        }
+
+        // Initialize
+        renderQuestion();
+    </script>
+</body>
+</html>

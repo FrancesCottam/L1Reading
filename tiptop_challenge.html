@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIPToP Challenge - L1 Reading</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Merriweather:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --time: #FF6B6B;
+            --place: #4ECDC4;
+            --topic: #45B7D1;
+            --person: #FFA07A;
+            --dark: #2C3E50;
+            --light: #ECF0F1;
+            --success: #2ECC71;
+            --error: #E74C3C;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+        
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            background: linear-gradient(135deg, var(--time), var(--place));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7F8C8D;
+            font-size: 1.1rem;
+        }
+        
+        .legend {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+        
+        .legend-item {
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            color: white;
+            font-size: 0.95rem;
+        }
+        
+        .time-badge { background: var(--time); }
+        .place-badge { background: var(--place); }
+        .topic-badge { background: var(--topic); }
+        .person-badge { background: var(--person); }
+        
+        .progress-tracker {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .progress-tracker span {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+        
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            animation: slideUp 0.4s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .text-display {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .paragraph {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+            font-family: 'Merriweather', serif;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .paragraph:last-child {
+            margin-bottom: 0;
+        }
+        
+        .paragraph.highlight-before {
+            border-left-color: var(--success);
+            background: #D1FAE5;
+        }
+        
+        .paragraph.highlight-after {
+            border-left-color: var(--person);
+            background: #FEF3C7;
+        }
+        
+        .break-indicator {
+            text-align: center;
+            padding: 15px;
+            font-size: 2rem;
+            color: var(--error);
+            font-weight: 800;
+        }
+        
+        .question-box {
+            background: linear-gradient(135deg, var(--dark) 0%, #34495e 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option-btn {
+            padding: 20px;
+            border: 3px solid #E5E7EB;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--dark);
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .option-btn.time:hover { border-color: var(--time); }
+        .option-btn.place:hover { border-color: var(--place); }
+        .option-btn.topic:hover { border-color: var(--topic); }
+        .option-btn.person:hover { border-color: var(--person); }
+        
+        .option-btn.selected.time { background: var(--time); color: white; border-color: var(--time); }
+        .option-btn.selected.place { background: var(--place); color: white; border-color: var(--place); }
+        .option-btn.selected.topic { background: var(--topic); color: white; border-color: var(--topic); }
+        .option-btn.selected.person { background: var(--person); color: white; border-color: var(--person); }
+        
+        .option-btn.correct {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+            animation: bounce 0.5s;
+        }
+        
+        .option-btn.incorrect {
+            background: var(--error);
+            color: white;
+            border-color: var(--error);
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .feedback {
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 15px;
+            animation: fadeIn 0.4s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .feedback.correct {
+            background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+            border-left: 5px solid var(--success);
+        }
+        
+        .feedback.incorrect {
+            background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+            border-left: 5px solid var(--error);
+        }
+        
+        .feedback h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .feedback p {
+            line-height: 1.7;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .evidence-box {
+            background: rgba(255,255,255,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .final-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .final-screen h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--time), var(--place));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--success) 0%, var(--place) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            font-weight: 800;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 TIPToP Challenge</h1>
+            <p>Master paragraph breaks with TIPToP!</p>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-grid">
+                <div class="legend-item time-badge">Ti - Time</div>
+                <div class="legend-item place-badge">P - Place</div>
+                <div class="legend-item topic-badge">To - Topic</div>
+                <div class="legend-item person-badge">P - Person</div>
+            </div>
+        </div>
+        
+        <div class="progress-tracker">
+            <span>Question: <span id="current">1</span>/5</span>
+            <span>Score: <span id="score">0</span>/5</span>
+        </div>
+        
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                before: "Maria woke up early on Saturday morning. She prepared her packed lunch and checked her equipment one final time. Everything was ready for the hiking trip.",
+                after: "Three hours later, she stood at the mountain peak, exhausted but thrilled. The view was spectacular. All the training had been worth it.",
+                question: "Why is there a paragraph break between these sections?",
+                correct: "time",
+                explanation: "The paragraph break shows a change in TIME. We move from 'Saturday morning' (preparation) to 'three hours later' (at the peak). The phrase 'three hours later' is a clear time signal.",
+                evidence: "Signal word: 'Three hours later' - this explicitly tells us time has passed."
+            },
+            {
+                before: "The café was buzzing with activity. Students hunched over laptops while others chatted over coffee. The smell of fresh pastries filled the air.",
+                after: "Outside, rain hammered against the windows. Pedestrians hurried past with umbrellas, trying to stay dry. The street was slick and shiny.",
+                question: "There is a paragraph break because of a change in...",
+                correct: "place",
+                explanation: "This is a change in PLACE. The first paragraph describes inside the café. The second paragraph moves outside to the street. The word 'Outside' signals this location change.",
+                evidence: "Signal word: 'Outside' - we've moved from inside the café to the street."
+            },
+            {
+                before: "Volunteering offers numerous personal benefits. You'll develop new skills, meet like-minded people, and gain confidence. Many employers value volunteer experience on a CV.",
+                after: "Local organizations desperately need volunteers. Food banks need packers, community gardens need helpers, and youth clubs need mentors. Just two hours a week can make a real difference.",
+                question: "The writer starts a new paragraph because there is a change in...",
+                correct: "topic",
+                explanation: "This is a change in TOPIC. The first paragraph discusses benefits TO YOU (what you get from volunteering). The second paragraph shifts to what ORGANIZATIONS NEED (opportunities available). The focus of discussion changed.",
+                evidence: "Topic 1: Your personal benefits. Topic 2: Organizations' needs and opportunities."
+            },
+            {
+                before: "Sarah had always wanted to be a nurse. She studied hard, worked part-time at a care home, and finally got accepted to university. Her determination had paid off.",
+                after: "Her younger brother Tom took a different path. He chose an apprenticeship in engineering, learning on the job while earning money. Both siblings were happy with their choices.",
+                question: "Why is there a paragraph break at this point?",
+                correct: "person",
+                explanation: "The paragraph break shows a change in PERSON. The first paragraph focuses on Sarah (she, her). The second paragraph shifts focus to Tom (he, his). When the subject changes from one person to another, writers create a new paragraph.",
+                evidence: "Paragraph 1: About Sarah (she, her). Paragraph 2: About Tom (he, his)."
+            },
+            {
+                before: "The Health and Safety Act was brought in when really awful things happened in factories. Workers had few protections and accidents were common. The law changed everything.",
+                after: "Today, the Act continues to protect millions of employees across the UK. Employers must provide safe working conditions and proper training. Failure to comply can result in heavy fines.",
+                question: "There is a break before the second paragraph because of a change in...",
+                correct: "topic",
+                explanation: "This is primarily a TOPIC change (though time also changes). The first paragraph discusses the PAST and WHY the Act was needed. The second paragraph shifts to the PRESENT and CURRENT requirements. The focus moved from historical problems to current responsibilities.",
+                evidence: "Topic shift: Past problems → Current requirements. Also note time change: 'was brought in' (past) → 'Today' (present)."
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+        let selected = null;
+
+        function renderQuestion() {
+            const q = questions[currentQ];
+            const container = document.getElementById('quiz-container');
+            
+            container.innerHTML = `
+                <div class="card">
+                    <div class="text-display">
+                        <div class="paragraph highlight-before">
+                            ${q.before}
+                        </div>
+                        <div class="break-indicator">⬇ PARAGRAPH BREAK ⬇</div>
+                        <div class="paragraph highlight-after">
+                            ${q.after}
+                        </div>
+                    </div>
+                    
+                    <div class="question-box">
+                        ${q.question}
+                    </div>
+                    
+                    <div class="options-grid">
+                        <div class="option-btn time" onclick="selectOption('time')">
+                            ⏰ Time
+                        </div>
+                        <div class="option-btn place" onclick="selectOption('place')">
+                            📍 Place
+                        </div>
+                        <div class="option-btn topic" onclick="selectOption('topic')">
+                            📝 Topic
+                        </div>
+                        <div class="option-btn person" onclick="selectOption('person')">
+                            👤 Person
+                        </div>
+                    </div>
+                    
+                    <button class="submit-btn" id="submit" onclick="checkAnswer()" disabled>
+                        Check Answer
+                    </button>
+                    
+                    <div id="feedback" class="hidden"></div>
+                </div>
+            `;
+            
+            selected = null;
+        }
+
+        function selectOption(option) {
+            selected = option;
+            
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            event.target.classList.add('selected');
+            document.getElementById('submit').disabled = false;
+        }
+
+        function checkAnswer() {
+            const q = questions[currentQ];
+            const feedback = document.getElementById('feedback');
+            const isCorrect = selected === q.correct;
+            
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                
+                if (btn.classList.contains(q.correct)) {
+                    btn.classList.add('correct');
+                } else if (btn.classList.contains('selected')) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            
+            if (isCorrect) {
+                score++;
+                document.getElementById('score').textContent = score;
+            }
+            
+            feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedback.innerHTML = `
+                <h3>${isCorrect ? '✓ Correct!' : '✗ Not Quite!'}</h3>
+                <p><strong>Answer: ${q.correct.toUpperCase()}</strong></p>
+                <p>${q.explanation}</p>
+                <div class="evidence-box">
+                    <strong>Evidence:</strong> ${q.evidence}
+                </div>
+            `;
+            feedback.classList.remove('hidden');
+            
+            const submitBtn = document.getElementById('submit');
+            submitBtn.textContent = currentQ < questions.length - 1 ? 'Next Question →' : 'See Results';
+            submitBtn.onclick = nextQuestion;
+            submitBtn.disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            
+            if (currentQ < questions.length) {
+                document.getElementById('current').textContent = currentQ + 1;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const container = document.getElementById('quiz-container');
+            const percentage = Math.round((score / questions.length) * 100);
+            
+            let message = '';
+            let emoji = '';
+            
+            if (percentage === 100) {
+                message = "Perfect! You're a TIPToP expert!";
+                emoji = "🏆";
+            } else if (percentage >= 80) {
+                message = "Excellent! You understand TIPToP well!";
+                emoji = "⭐";
+            } else if (percentage >= 60) {
+                message = "Good work! Keep practicing!";
+                emoji = "👍";
+            } else {
+                message = "Keep learning! TIPToP will click soon!";
+                emoji = "📚";
+            }
+            
+            container.innerHTML = `
+                <div class="card final-screen">
+                    <div style="font-size: 5rem;">${emoji}</div>
+                    <h2>Challenge Complete!</h2>
+                    <div class="score-circle">${score}/${questions.length}</div>
+                    <p style="font-size: 1.3rem; margin-bottom: 30px; color: var(--dark);">
+                        ${message}
+                    </p>
+                    <button class="submit-btn" onclick="location.reload()">
+                        Try Again
+                    </button>
+                </div>
+            `;
+        }
+
+        // Initialize
+        renderQuestion();
+    </script>
+</body>
+</html>
